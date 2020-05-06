@@ -1,20 +1,23 @@
 <?php
 
     $error = "";
-    $failure = false;
 
     if ($_POST) {
 
         if (!$_POST["email"]) {
 
             $error .= "An email address is required.<br>";
+            $email = "";
+
 
         } else {
+            
+            $email = $_POST["email"];
             
             if (filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) == false) {
 
                 $error .= "The email address is invalid.<br>";
-
+                
             }
             
         }
@@ -22,27 +25,33 @@
         if (!$_POST["subject"]) {
 
             $error .= "A subject is required.<br>";
+            $subject = "";
 
+        } else {
+            
+            $subject = $_POST["subject"];
+            
         }
 
         if (!$_POST["message"]) {
 
             $error .= "A message is required.<br>";
+            $message = "";
 
-        }     
+        } else {
+            
+            $message = $_POST["message"];
+            
+        }
 
 
         if ($error != "") {
 
             $error = "<div class='alert alert-danger' role='alert'>" . $error . "</div>";
-            $failure = true;
             
 
         } else {
 
-            $email = $_POST["email"];
-            $subject = $_POST["subject"];
-            $message = $_POST["message"];
 
             $mailTo = "angusdmacrae@gmail.com";
             $headers = "From: ".$email;
@@ -50,11 +59,13 @@
             if (mail($mailTo, $subject, $message, $headers)) {
 
                 $error = "<div class='alert alert-success' role='alert'>Message sent successfully!</div>";
+                $email = "";
+                $subject = "";
+                $message = "";                
 
             } else {
 
                 $error = "<div class='alert alert-danger' role='alert'>Message did not send - a problem occurred.</div>";
-                $failure = true;
 
             }
 
@@ -83,16 +94,16 @@
         <form method="post">
             <div class="form-group">
                 <label for="emailInput">Email address</label>
-                <input type="email" class="form-control" name="email" id="emailInput" aria-describedby="emailHelp" value="<?php if ($failure) {echo $email;} ?>">
+                <input type="email" class="form-control" name="email" id="emailInput" aria-describedby="emailHelp" value="<?php echo $email; ?>">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
             <div class="form-group">
                 <label for="subjectInput">Subject</label>
-                <input type="text" class="form-control" name="subject" id="subjectInput" value="<?php if ($failure) {echo $subject;} ?>">
+                <input type="text" class="form-control" name="subject" id="subjectInput" value="<?php echo $subject; ?>">
             </div>
             <div class="form-group">
                 <label for="msgInput">Message</label>
-                <textarea class="form-control" name="message" id="msgInput"><?php if ($failure) {echo $message;} ?></textarea>
+                <textarea class="form-control" name="message" id="msgInput"><?php echo $message; ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
